@@ -19,10 +19,6 @@
 @property (nonatomic, strong) CAShapeLayer *trackLayer;
 //进度layer
 @property (nonatomic, strong) CAShapeLayer *progressLayer;
-//计时器
-@property (nonatomic, strong) NSTimer *timer;
-
-@property (nonatomic, assign) CGFloat strokenEnd;
 
 @end
 
@@ -35,11 +31,9 @@
         return nil;
     }
     
-    self.strokenEnd = 0;
-    
     [self initSubView];
     
-    [self addProgressTimer];
+    [self setProgressAnimation];
     return self;
 }
 
@@ -100,21 +94,14 @@
 }
 
 //计时器事件
-- (void)addProgressTimer
+- (void)setProgressAnimation
 {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(progressGrow) userInfo:nil repeats:YES];
-    [self.timer fire];
-    
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    animation.fromValue = @0;
+    animation.toValue = @0.8;
+    animation.duration = 5;
+    self.progressLayer.strokeEnd = 0.8;
     [self.progressLayer addAnimation:animation forKey:nil];
-}
-
-- (void)progressGrow
-{
-    self.strokenEnd += 0.005;
-    self.strokenEnd = self.strokenEnd >= 1 ? 1 : self.strokenEnd;
-    
-    self.progressLayer.strokeEnd = self.strokenEnd;
 }
 
 - (UIColor *)hexChangeFloat:(NSString *) hexColor {
